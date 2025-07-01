@@ -19,60 +19,54 @@ node* createNode(int value){
     return newNode;
 }
 
-int height(node *root){
-    if(!root) return -1;
-
-    int leftHeight = height(root->left) + 1;
-    int rightHeight = height(root->right) + 1;
-    
-    if (leftHeight > rightHeight) return leftHeight;
-
-    else return rightHeight;
-}
-
-void cbUpdate(node* root){
-    if(root) root->cb = height(root->right) - height(root->left);
-}
-
-
+//rever
 node* rotateRight(node* root){
-    
-    node *pivot = root, *t1 = pivot->left, *t2 = t1->right; 
-    
-    t1->right = pivot;
-    pivot->left = t2;
 
-    cbUpdate(pivot);
-    cbUpdate(t1);
-    cbUpdate(t2);
+    node *a = root, *b = a->left, *c = b->right;
+    
+    b->right = a;
+    b->cb = 0;
 
-    return t1;
+
+    a->left = c;
+    a->cb = 0;
+
+    return b;
 }
-
+//rever
 node* rotateLeft(node* root){
     
-    node *pivot = root, *t1 = pivot->right, *t2 = t1->left; 
+    node *a = root, *b = a->right, *c = b->left;
+
+    b->left = a;
+    b->cb = 0;
+
+    a->right = c;
+    a->cb = 0;
+
+    return b;
     
-    t1->left = pivot;
-    pivot->right = t2;
+}
+//aqui
+node *rotateDoubleLeft(node *root){
 
-    cbUpdate(pivot);
-    cbUpdate(t1);
-    cbUpdate(t2);
 
-    return t1;
+}
+//aqui
+node *rotateLeftRight(node *root){
+
+
+
 }
 
-node *rotateDoubleLeft(node *root){}
 
-node *rotateDoubleRight(node *root){}
+node* balance(node* root){ //no com cb > = 2 // -2
 
+    //rotação à esquerda (desequilibrio a direita)
+    if(root->cb > 1 && root->right->cb > 0) root = rotateLeft(root);
 
-node* balance(node* root){
-
-    //rotação à direta
-    if(root->cb > 1 && root->right->cb >= 0) root = rotateLeft(root);
-
+    else if(root->cb > 1 && root->right->cb < 0)
+  
     return root;
 
 }
