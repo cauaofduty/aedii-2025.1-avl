@@ -187,7 +187,7 @@ node* insert(node* root, int value, int* raised){
             }
         }
     //caso inserção esquerda
-    } else {
+    } else if (value < root->value){
         root->left = insert(root->left, value, raised);
 
         if(*raised){
@@ -246,10 +246,9 @@ node* removeNode(node* root, int value, int *changed){
         root->left = removeNode(root->left, value, changed);
 
         if(*changed == 1){
-            switch (root->cb)
-            {
+            switch (root->cb){
+                
             case 1://caso de desbalanceamento
-                *changed = 1;
                 root = leftRotationCheck(root);
                 break;
 
@@ -259,7 +258,6 @@ node* removeNode(node* root, int value, int *changed){
                 break;
             
             case -1:
-                *changed = 1;
                 root->cb = 0;
                 break;
 
@@ -274,8 +272,8 @@ node* removeNode(node* root, int value, int *changed){
         root->right = removeNode(root->right, value, changed);
 
         if(*changed == 1){
-            switch (root->cb)
-            {
+            switch (root->cb){
+
             case 1:
                 root->cb = 0;
                 *changed = 1;
@@ -287,7 +285,7 @@ node* removeNode(node* root, int value, int *changed){
                 break;
             
             case -1:
-                *changed = 0;
+                *changed = 1;
                 root = rightRotationCheck(root);
                 break;
             default:
@@ -331,10 +329,10 @@ void posOrder(node *root){
 
     if(!root) return;
 
-    printf("[%d cb: %d]", root->value, root->cb);
-
+    
     posOrder(root->left);
-
+    
     posOrder(root->right);
     
+    printf("[%d cb: %d]", root->value, root->cb);
 }
