@@ -298,20 +298,25 @@ node* removeNode(node* root, int value, int *changed){
         *changed = 1;
 
         //caso folha
-        if (!root->left && !root->right) return NULL;
+        if (!root->left && !root->right){
+            free(root);
+            return NULL;
+        } 
         //caso filho esquerdo unico
         else if (root->left && !root->right){
 
-            //copia valor do no filho e remove-o no no filho 
-            root->value = root->left->value;
-            root->left = removeNode(root->left, root->value, changed);
+            //utiliza ponteiro auxiliar para salvar filho e limpar nó atual
+            node *aux = root->left;
+            free(root);
+            return aux;
         }
         //caso filho direito unico
         else if (!root->left && root->right){
             
-            //copia valor do no filho e remove-o no no filho
-            root->value = root->right->value;
-            root->right = removeNode(root->right, root->value, changed);
+            //utiliza ponteiro auxiliar para salvar filho e limpar nó atual
+            node *aux = root->right;
+            free(root);
+            return aux;
         }
         //caso de dois filhos
         else {
