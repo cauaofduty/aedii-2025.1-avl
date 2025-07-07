@@ -1,1 +1,3 @@
-[6 cb: 0][3 cb: 0][9 cb: 0]
+[5 cb: 1][3 cb: 1][4 cb: 0][8 cb: -1][7 cb: -1][6 cb: 0][10 cb: 0]
+[5 cb: 1][3 cb: 1][4 cb: 0][7 cb: 0][6 cb: 0][8 cb: 0]
+basicamente, o algoritmo não corrige o balanceamento da raiz true

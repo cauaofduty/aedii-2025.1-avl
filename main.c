@@ -2,7 +2,7 @@
 #include "avl.h"
 
 int main(){
-	int opt = 0, value, valueReturn; // ->  value2
+	int opt = 0, value, valueReturn;
 	node* avl = NULL;
 	while(1){
 		scanf("%d", &opt);
@@ -10,16 +10,16 @@ int main(){
 			case 1:
 				//inserir
 				scanf("%d", &value);
-				avl = insert(avl, value);
+				avl = insert(avl, value, &valueReturn);
 				break;		
 			case 2://inorder
-				inOrder(avl);
+				posOrder(avl);
 				printf("\n");
 				break;
-			case 3://altura
-				valueReturn = height(avl);
-				printf("%d\n", valueReturn);
-				break;
+			case 3://remover
+				scanf("%d", &value);
+				avl = removeNode(avl, value, &valueReturn);
+			break;
 			case 99:
 				return 0;
 

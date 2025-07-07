@@ -9,12 +9,12 @@ typedef struct Node{
 }node;
 
 // Function declarations
-node* insert(node*root, int value);
-void inOrder(node *root);
-node* rotateRight(node*root);
-node* rotateDoubleRight(node*root);
-node* rotateLeft(node*root);
-node* rotateDoubleLeft(node*root);
-int height(node*root);
-node *removeNode(node*root, int value);
+node* insert(node* root, int value, int* raised);
+void posOrder(node* root);
+node* rotateRight(node* root);
+node* rotateDoubleRight(node* root);
+node* rotateLeft(node* root);
+node* rotateDoubleLeft(node* root);
+node *removeNode(node* root, int value, int *changed);
+int sucessor(node* root, int value);
 #endif // MAIN_H

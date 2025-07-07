@@ -29,6 +29,8 @@ node* rotateRight(node* root){
     a->left = c;
     a->cb = 0;
 
+    //a intenção é atualizar esse cb fora dessa função para não alterar cbs indevidamente numa rotação dupla
+    //retorna nova raiiz, b
     return b;
 }
 
@@ -44,11 +46,12 @@ node* rotateLeft(node* root){
     a->cb = 0;
 
     //a intenção é atualizar esse cb fora dessa função para não alterar cbs indevidamente numa rotação dupla
+    //retorna nova raiz, b
     return b;
     
 }
 
-node *rotateRightLeft(node *root){
+node *rotateDoubleLeft(node *root){
 
     node *a = root, *b = a->right, *c = b->left; 
 
@@ -83,7 +86,7 @@ node *rotateRightLeft(node *root){
     return c;
 }
 //aqui
-node *rotateLeftRight(node *root){
+node *rotateDoubleRight(node *root){
 
     node *a = root, *b = a->left, *c = b->right;
 
@@ -118,9 +121,39 @@ node *rotateLeftRight(node *root){
     return c;
 }
 
+//verifica rotação esquerda
+node* leftRotationCheck(node *root){
+    //caso cb = 1 faz rotação simples, do contrário, dupla
+    if(root->right && root->right->cb == 1){
+
+        root = rotateLeft(root);
+
+        //atualiza cb da nova raiz
+        root->cb = 0;
+    } 
+    //retorna nova raiz com cb já atualizado
+    else root = rotateDoubleLeft(root);
+
+    return root;
+}
+
+//verifica rotação direita
+node* rightRotationCheck(node *root){
+    //caso cb = -1 faz rotação simples, do contrário, dupla
+    if(root->left && root->left->cb == -1){
+
+        root = rotateRight(root);
+        root->cb = 0;
+    }
+
+    else root = rotateDoubleRight(root);
+
+    return root;
+}
+
 
 //como orientado em aula, jeito mais simples para indicar desbalanceamento é utilizar ponteiro para flag que indica crescimento de lado da arvore
-node* insert(node *root, int value, int* raised){
+node* insert(node* root, int value, int* raised){
     if(!root){
         *raised = 1;
         return createNode(value); 
@@ -131,25 +164,25 @@ node* insert(node *root, int value, int* raised){
         root->right = insert(root->right, value, raised);
         
         //verifica atualização de cb
-        if(raised){
+        if(*raised){
             switch (root->cb){
 
-            case -1:
+            case -1: //inserção balanceou
                 root->cb = 0;
-                raised = 0;
+                *raised = 0;
                 break;
 
-            case 0:
+            case 0: //propaga balanceamento
                 root->cb = 1;
-                raised = 1;
+                *raised = 1;
                 break;
 
-            case 1:
-                raised = 0;
-                if()
-
+            case 1: //rotação disparada
+                *raised = 0;
+                root = leftRotationCheck(root);
+                break;
             default://via das duvidas
-                printf("erro em algum lugar no balanceamento\n");
+                printf("erro em algum lugar no balanceamento na direita\n");
                 break;
             }
         }
@@ -157,24 +190,24 @@ node* insert(node *root, int value, int* raised){
     } else {
         root->left = insert(root->left, value, raised);
 
-        if(raised){
+        if(*raised){
             switch (root->cb) {
             case -1: //para de propagar a verificação
-                raised = 0;
-                return rotate(root);
-
+                *raised = 0;
+                root = rightRotationCheck(root);
+                break;
             case 0:
                 root->cb = -1;
-                raised = 1;
+                *raised = 1;
                 break;
 
             case 1:
-                raised = 0;
+                *raised = 0;
                 root->cb = 0;
                 break;
 
             default://via das duvidas
-                printf("erro em algum lugar no balanceamento\n");
+                printf("erro em algum lugar no balanceamento na esquerda\n");
                 break;
             }
 
@@ -183,18 +216,125 @@ node* insert(node *root, int value, int* raised){
 
     }
 
+    return root;
+}
 
+int sucessor(node* root, int value){
+    
+    if(!root) return -1;
+    
+    //realiza descida
+    if(value >= root->value) return sucessor(root->right, value);
+    
+    else {
+
+        int suc = sucessor(root->left, value);
+
+        if(suc != -1) return suc;
+
+        else return root->value;
+
+    }
+}
+
+node* removeNode(node* root, int value, int *changed){
+
+    if(!root) return NULL;
+       
+    if(value < root->value){
+
+        root->left = removeNode(root->left, value, changed);
+
+        if(*changed == 1){
+            switch (root->cb)
+            {
+            case 1://caso de desbalanceamento
+                *changed = 1;
+                root = leftRotationCheck(root);
+                break;
+
+            case 0://caso de crescimento na direita
+                root->cb = 1;
+                *changed = 0;
+                break;
+            
+            case -1:
+                *changed = 1;
+                root->cb = 0;
+                break;
+
+            default:
+                printf("erro no balanceamento da remocao esquerda\n");
+                break;
+            }
+        }
+
+    } else if (value > root->value){
+
+        root->right = removeNode(root->right, value, changed);
+
+        if(*changed == 1){
+            switch (root->cb)
+            {
+            case 1:
+                root->cb = 0;
+                *changed = 1;
+                break;
+
+            case 0://caso de crescimento na esquerda
+                root->cb = -1;
+                *changed = 0; //apenas visual
+                break;
+            
+            case -1:
+                *changed = 0;
+                root = rightRotationCheck(root);
+                break;
+            default:
+            printf("erro no balanceamento da remocao direita\n");
+                break;
+            }
+        }
+    //caso de valor encontrado
+    } else {
+        *changed = 1;
+
+        //caso folha
+        if (!root->left && !root->right) return NULL;
+        //caso filho esquerdo unico
+        else if (root->left && !root->right){
+
+            //copia valor do no filho e remove-o no no filho 
+            root->value = root->left->value;
+            root->left = removeNode(root->left, root->value, changed);
+        }
+        //caso filho direito unico
+        else if (!root->left && root->right){
+            
+            //copia valor do no filho e remove-o no no filho
+            root->value = root->right->value;
+            root->right = removeNode(root->right, root->value, changed);
+        }
+        //caso de dois filhos
+        else {
+            //procura o valor sucessor do no removido e remove-o nos filhos
+            root->value = sucessor(root, value);
+            root->right = removeNode(root->right,root->value, changed);
+        }
+    }
+
+    return root;
 }
 
 
-void inOrder(node *root){
+void posOrder(node *root){
 
     if(!root) return;
 
     printf("[%d cb: %d]", root->value, root->cb);
 
-    inOrder(root->left);
+    posOrder(root->left);
 
-    inOrder(root->right);
+    posOrder(root->right);
     
 }
