@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include "avl.h"
 
+//NEM TODAS AS FUNCOES DA AVL.C ESTAO NO ARQUIVO HEADER
+
 node* createNode(int value){
 
     node* newNode = (node*)malloc(sizeof(node));
@@ -219,22 +221,12 @@ node* insert(node* root, int value, int* raised){
     return root;
 }
 
-int sucessor(node* root, int value){
+int greatest(node* root){//inserir o nó a procurar o maior sucessor (nesse caso, esquerdo do nó desejado)
     
-    if(!root) return -1;
+    if(!root->right) return root->value;
     
-    //realiza descida
-    if(value >= root->value) return sucessor(root->right, value);
+    return greatest(root->right);
     
-    else {
-
-        int suc = sucessor(root->left, value);
-
-        if(suc != -1) return suc;
-
-        else return root->value;
-
-    }
 }
 
 node* removeNode(node* root, int value, int *changed){
@@ -281,7 +273,7 @@ node* removeNode(node* root, int value, int *changed){
 
             case 0://caso de crescimento na esquerda
                 root->cb = -1;
-                *changed = 0; //apenas visual
+                *changed = 0;
                 break;
             
             case -1:
@@ -320,9 +312,9 @@ node* removeNode(node* root, int value, int *changed){
         }
         //caso de dois filhos
         else {
-            //procura o valor sucessor do no removido e remove-o nos filhos
-            root->value = sucessor(root, value);
-            root->right = removeNode(root->right,root->value, changed);
+            //procura o valor predecessor no nó esquerdo
+            root->value = greatest(root->left);
+            root->left = removeNode(root->left,root->value, changed);
         }
     }
 

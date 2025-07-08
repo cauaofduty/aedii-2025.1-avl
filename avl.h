@@ -16,5 +16,5 @@ node* rotateDoubleRight(node* root);
 node* rotateLeft(node* root);
 node* rotateDoubleLeft(node* root);
 node *removeNode(node* root, int value, int *changed);
-int sucessor(node* root, int value);
+int greatestPredecessor(node* root);
 #endif // MAIN_H
