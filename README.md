@@ -44,11 +44,14 @@ formato, espaçando as entradas, porem é recomendável ser feito o seguinte:
 
 [11 0]
 
-Onde:  
-1 X- Inserção de X na árvore.  
-2- Print de todos os elementos da árvore em percurso pre-order com indicação do fator de balanceamento.  
-3 X- Remoção de X da árvore.  
-99- Finaliza o laço, deve estar obrigatoriamente em todas as entradas, do contrario gerará erro.
+## 📘 Onde:
+
+| Código   | Ação                          | Descrição                                                                 |
+|----------|-------------------------------|---------------------------------------------------------------------------|
+| `1 X`    | Inserção                      | Insere o valor `X` na árvore AVL                                          |
+| `2`      | Print                         | Imprime todos os elementos da árvore em pré-ordem com indicação de coeficiente de balanceamento de cada nó |
+| `3 X`    | Remoção                       | Remove o valor `X` da árvore AVL, aplicando rotações conforme necessário  |
+| `99`     | Finalizar                     | Encerra o programa (obrigatório ao final da entrada)                      |
 
 
 #### ⁉Como utilizar:
