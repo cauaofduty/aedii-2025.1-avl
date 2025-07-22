@@ -8,13 +8,15 @@ typedef struct Node{
     struct Node* right;
 }node;
 
-// Function declarations
+
 node* insert(node* root, int value, int* raised);
-void posOrder(node* root);
-node* rotateRight(node* root);
-node* rotateDoubleRight(node* root);
-node* rotateLeft(node* root);
-node* rotateDoubleLeft(node* root);
+void preOrder(node* root);
+node* rightRotate(node* root);
+node* doubleRightRotation(node* root);
+node* rightRotationCheck(node *root);
+node* leftRotate(node* root);
+node* doubleLeftRotation(node* root);
+node* leftRotationCheck(node *root);
 node *removeNode(node* root, int value, int *changed);
 int greatestPredecessor(node* root);
 #endif // MAIN_H

@@ -22,7 +22,7 @@ node* createNode(int value){
 }
 
 
-node* rotateRight(node* root){
+node* rightRotate(node* root){
 
     node *a = root, *b = a->left, *c = b->right;
     
@@ -36,7 +36,7 @@ node* rotateRight(node* root){
     return b;
 }
 
-node* rotateLeft(node* root){
+node* leftRotate(node* root){
     
     node *a = root, *b = a->right, *c = b->left;
 
@@ -53,14 +53,14 @@ node* rotateLeft(node* root){
     
 }
 
-node *rotateDoubleLeft(node *root){
+node *doubleLeftRotation(node *root){
 
     node *a = root, *b = a->right, *c = b->left; 
 
-    a->right = rotateRight(b);
+    a->right = rightRotate(b);
 
     //como na proxima rotação a nova raiz é c, que atualmente é filho de a:
-    c = rotateLeft(a);
+    c = leftRotate(a);
 
     //analiza cb antigo de c (que é a nova raiz), antes de alterar
     switch (c->cb){
@@ -88,14 +88,14 @@ node *rotateDoubleLeft(node *root){
     return c;
 }
 //aqui
-node *rotateDoubleRight(node *root){
+node *doubleRightRotation(node *root){
 
     node *a = root, *b = a->left, *c = b->right;
 
-    a->left = rotateLeft(b);
+    a->left = leftRotate(b);
 
     //como na proxima rotação a nova raiz é c, que atualmente é filho de a:
-    c = rotateRight(a);
+    c = rightRotate(a);
 
     //analiza cb "antigo" de c
     switch (c->cb){
@@ -128,13 +128,13 @@ node* leftRotationCheck(node *root){
     //caso cb = 1 faz rotação simples, do contrário, dupla
     if(root->right && root->right->cb == 1){
 
-        root = rotateLeft(root);
+        root = leftRotate(root);
 
         //atualiza cb da nova raiz
         root->cb = 0;
     } 
     //retorna nova raiz com cb já atualizado
-    else root = rotateDoubleLeft(root);
+    else root = doubleLeftRotation(root);
 
     return root;
 }
@@ -144,11 +144,11 @@ node* rightRotationCheck(node *root){
     //caso cb = -1 faz rotação simples, do contrário, dupla
     if(root->left && root->left->cb == -1){
 
-        root = rotateRight(root);
+        root = rightRotate(root);
         root->cb = 0;
     }
 
-    else root = rotateDoubleRight(root);
+    else root = doubleRightRotation(root);
 
     return root;
 }
@@ -322,14 +322,14 @@ node* removeNode(node* root, int value, int *changed){
 }
 
 
-void posOrder(node *root){
+void preOrder(node *root){
 
     if(!root) return;
 
+    printf("[%d %d]", root->value, root->cb);
     
-    posOrder(root->left);
+    preOrder(root->left);
     
-    posOrder(root->right);
+    preOrder(root->right);
     
-    printf("[%d cb: %d]", root->value, root->cb);
 }
